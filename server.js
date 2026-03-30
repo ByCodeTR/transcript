@@ -24,6 +24,48 @@ function cleanCueText(text) {
     .trim();
 }
 
+function canonicalizeYouTubeUrl(input) {
+  try {
+    const parsed = new URL(input);
+    const videoId =
+      parsed.searchParams.get('v') ||
+      (parsed.hostname.includes('youtu.be') ? parsed.pathname.replace('/', '') : null);
+
+    if (!videoId) return input;
+    return `https://www.youtube.com/watch?v=${videoId}`;
+  } catch {
+    return input;
+  }
+}
+
+function mapTranscriptError(error, originalUrl) {
+  const message = error instanceof Error ? error.message : 'Transcript alinamadi.';
+
+  if (message.includes('Transcript is disabled on this video')) {
+    return {
+      status: 422,
+      error:
+        'Bu videoda altyazi/transcript kapali. YouTube tarafinda transcript yoksa teknik olarak cekemeyiz. Baska bir video dene.',
+    };
+  }
+
+  if (message.includes('No transcripts are available for this video')) {
+    return {
+      status: 404,
+      error: `Bu video icin transcript bulunamadi: ${originalUrl}`,
+    };
+  }
+
+  if (message.includes('Impossible to retrieve Youtube video ID')) {
+    return {
+      status: 400,
+      error: 'YouTube linki okunamadi. Tam video URLsi gir.',
+    };
+  }
+
+  return { status: 500, error: message };
+}
+
 app.post('/api/transcript', async (req, res) => {
   const { url } = req.body ?? {};
 
@@ -32,7 +74,8 @@ app.post('/api/transcript', async (req, res) => {
   }
 
   try {
-    const transcriptItems = await YoutubeTranscript.fetchTranscript(url);
+    const canonicalUrl = canonicalizeYouTubeUrl(url);
+    const transcriptItems = await YoutubeTranscript.fetchTranscript(canonicalUrl);
 
     if (!transcriptItems?.length) {
       return res.status(404).json({ error: 'Bu video icin transcript bulunamadi.' });
@@ -51,8 +94,8 @@ app.post('/api/transcript', async (req, res) => {
       text: normalizeTranscript(cleanedChunks),
     });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Transcript alinamadi.';
-    return res.status(500).json({ error: message });
+    const mapped = mapTranscriptError(error, url);
+    return res.status(mapped.status).json({ error: mapped.error });
   }
 });
 
