@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Transcript Hızlı</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <p class="team">Erkan Kolcu Team</p>
+      <h1>YouTube Transcript</h1>
+      <p class="subtitle">Linki yapıştır, doğru videoyu kare önizlemede gör, transcripti hızlıca al.</p>
+
+      <section class="top-grid">
+        <form id="form">
+          <label for="url">YouTube Linki</label>
+          <div class="input-shell">
+            <span class="yt-dot"></span>
+            <input id="url" name="url" type="url" placeholder="https://www.youtube.com/watch?v=..." required />
+          </div>
+          <p class="helper">watch?v=... veya youtu.be/... formatı desteklenir.</p>
+
+          <button type="submit">Transcript Al</button>
+        </form>
+
+        <section class="preview-card">
+          <h2>Video Önizleme</h2>
+          <div class="preview-frame" id="previewFrame">
+            <p id="previewPlaceholder">Link eklediğinde video burada görünecek.</p>
+            <iframe id="previewPlayer" title="YouTube video preview" allowfullscreen></iframe>
+          </div>
+          <p id="videoMeta" class="video-meta"></p>
+        </section>
+      </section>
+
+      <div id="status" class="status"></div>
+
+      <section class="result-wrap">
+        <div class="result-head">
+          <h2>Transcript Sonucu</h2>
+          <button id="copyBtn" type="button">Tamamını Kopyala</button>
+        </div>
+
+        <textarea id="result" readonly placeholder="Transcript burada görünecek..."></textarea>
+
+        <div>
+          <h3>Zaman Damgalı Parçalar</h3>
+          <div id="chunkList" class="chunk-list"></div>
+        </div>
+
+        <div class="stats stats-bottom" id="stats"></div>
+      </section>
+    </main>
+
+    <footer class="footer">tasarım ve kodlama Atıf Doğan ÖZCAN</footer>
+
+    <script src="/main.js"></script>
+  </body>
+</html>
