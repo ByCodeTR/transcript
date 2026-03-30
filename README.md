@@ -21,7 +21,6 @@ Tarayıcıdan aç:
 ## Özellikler
 
 - YouTube URL gir, transcript çek
-- Opsiyonel dil kodu (`tr`, `en` gibi)
 - Tek parça düz metin olarak çıktı
 - Panoya kopyala butonu
 
@@ -33,7 +32,13 @@ Body örneği:
 
 ```json
 {
-  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-  "lang": "en"
+  "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 }
 ```
+
+## Railway Deploy
+
+1. Railway dashboard'da `New Project` -> `Deploy from GitHub Repo`.
+2. Repo olarak `ByCodeTR/transcript` sec.
+3. Service acildiginda `railway.json` otomatik okunur.
+4. Deploy tamamlaninca verilen `*.up.railway.app` URL'yi ac.
